@@ -22,13 +22,13 @@ namespace MusyXBoy {
             [Option('l', "log", Required = false, HelpText = "Directory to store serializer logs in. Logging disabled if not specified.")]
             public string LogDirectory { get; set; }
 
-            [Option('x', "xmlog", Required = false, HelpText = "Directory to store XM logs in. Logging disabled if not specified.")]
-            public string XMLogDirectory { get; set; }
+            /*[Option('x', "xmlog", Required = false, HelpText = "Directory to store XM logs in. Logging disabled if not specified.")]
+            public string XMLogDirectory { get; set; }*/
 
-            [Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
-            public bool Verbose { get; set; }
+            /*[Option('v', "verbose", Required = false, HelpText = "Set output to verbose messages.")]
+            public bool Verbose { get; set; }*/
 
-            // TODO: Allow option for providing the address of a single song, and another option for setting the major GAX version
+            // TODO: Allow option for providing the address of a single MusyX file
         }
 
 
@@ -43,11 +43,11 @@ namespace MusyXBoy {
         private const int progressTextWidth = 40;
 
         private static void ParseROM(Options options) {
-            Settings.Verbose = options.Verbose;
+            //Settings.Verbose = options.Verbose;
             Settings.Log = !string.IsNullOrEmpty(options.LogDirectory);
             Settings.LogDirectory = options.LogDirectory;
-            Settings.XMLog = !string.IsNullOrEmpty(options.XMLogDirectory);
-            Settings.XMLogDirectory = options.XMLogDirectory;
+            //Settings.XMLog = !string.IsNullOrEmpty(options.XMLogDirectory);
+            //Settings.XMLogDirectory = options.XMLogDirectory;
 
             string fullPath = Path.GetFullPath(options.InputFile);
             string basePath = Path.GetDirectoryName(fullPath);

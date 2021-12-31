@@ -7,7 +7,7 @@
     <ProjectGuid>{8AE4D28B-88FA-4CAB-8A10-9FEBE8AF8682}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>MusyXBoy</RootNamespace>
-    <AssemblyName>MusyXBoy</AssemblyName>
+    <AssemblyName>musyxboy</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -79,7 +79,6 @@
     </PackageReference>
     <PackageReference Include="Costura.Fody">
       <Version>5.7.0</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Goblinfactory.Konsole">
