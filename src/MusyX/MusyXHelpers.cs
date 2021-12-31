@@ -99,6 +99,10 @@ namespace MusyXBoy {
                 var instrumentBytes = musyxFile.InstrumentTable.Value.InstrumentBytes[i];
                 ByteArrayToFile(Path.Combine(outPath, $"{i}_{musyxFile.InstrumentTable.Value.Instruments[i].SerializedOffset:X8}.bin"), instrumentBytes);
             }
+            outPath = Path.Combine(mainDirectory, "SongMidi");
+            for (int i = 0; i < (musyxFile.SongTable?.Value?.Length ?? 0); i++) {
+                MusyX_MidiConverter conv = new MusyX_MidiConverter(musyxFile.SongTable.Value.Songs[i].Song);
+            }
         }
 
     }

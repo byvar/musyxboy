@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="BinarySerializer\Context.cs" />
     <Compile Include="MusyX\MusyXHelpers.cs" />
+    <Compile Include="MusyX\MusyX_MidiConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
