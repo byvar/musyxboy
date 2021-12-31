@@ -85,6 +85,9 @@
     <PackageReference Include="Goblinfactory.Konsole">
       <Version>6.2.2</Version>
     </PackageReference>
+    <PackageReference Include="Sanford.Multimedia.Midi">
+      <Version>6.6.2</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

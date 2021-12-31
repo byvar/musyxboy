@@ -1,7 +1,9 @@
 ﻿using BinarySerializer;
 using BinarySerializer.GBA.Audio.MusyX;
+using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,18 +11,76 @@ using System.Threading.Tasks;
 namespace MusyXBoy {
 	public class MusyX_MidiConverter {
 		public MusyX_Song Song { get; set; }
-		public Track[] Tracks { get; set; }
+		public TemporaryTrack[] Tracks { get; set; }
 		public MusyX_MidiConverter(MusyX_Song song) {
 			Song = song;
-			Tracks = new Track[17];
+			Tracks = new TemporaryTrack[17];
 			for (int i = 0; i < Tracks.Length; i++) {
-				Tracks[i] = ConvertTrack(song, song.Tracks[i]);
+				Tracks[i] = ConvertTrackToTemporaryFormat(song, song.Tracks[i]);
 			}
 		}
 
-		public Track ConvertTrack(MusyX_Song song, MusyX_Track mtr) {
+		public void Write(string outPath) {
+			var s = new Sequence(96); // MIDI->MusyX converter multiplies all times by (96.0/original_division)
+			s.Format = 1; // Synchronous tracks
+			for (int i = 0; i < 16; i++) {
+				if(Tracks[i] != null)
+					s.Add(ConvertTemporaryToMidi(Tracks[i], i));
+			}
+			// This plugin doesn't overwrite files
+			Directory.CreateDirectory(Path.GetDirectoryName(outPath));
+			if (File.Exists(outPath)) {
+				File.Delete(outPath);
+			}
+			s.Save(outPath);
+		}
+
+		public Track ConvertTemporaryToMidi(TemporaryTrack track, int channel) {
+			Track t = new Track();
+
+			// TODO: Add loop points, add tempo change events
+
+			// Set BPM
+			TempoChangeBuilder b = new TempoChangeBuilder();
+			b.Tempo = 60000000 / Song.BPM;
+			b.Build();
+			t.Insert(0, b.Result);
+
+			foreach (var e in track.Entries) {
+				var msg = e.Message;
+				if (msg != null) {
+					if(msg.IsEnd) continue;
+					if (msg.ProgramChange) {
+						ChannelMessageBuilder builder = new ChannelMessageBuilder();
+						builder.Command = ChannelCommand.ProgramChange;
+						builder.MidiChannel = channel;
+						builder.Data1 = msg.Patch;
+						builder.Build();
+						t.Insert((int)e.TotalTime, builder.Result);
+					}
+					if (msg.Note != 0) {
+						ChannelMessageBuilder builder = new ChannelMessageBuilder();
+						builder.Command = ChannelCommand.NoteOn;
+						builder.MidiChannel = channel;
+						builder.Data1 = msg.Note;
+						builder.Data2 = msg.Velocity;
+						builder.Build();
+						t.Insert((int)e.TotalTime, builder.Result);
+
+						builder.Command = ChannelCommand.NoteOff;
+						builder.Data2 = 127;
+						builder.Build();
+						t.Insert((int)e.TotalTime + msg.SustainTime, builder.Result);
+					}
+				}
+			}
+
+			return t;
+		}
+
+		public TemporaryTrack ConvertTrackToTemporaryFormat(MusyX_Song song, MusyX_Track mtr) {
 			if(mtr == null) return null;
-			var track = new Track();
+			var track = new TemporaryTrack();
 			// Loop
 			if (mtr.Entries.Last().PatternIndex == -2) {
 				track.LoopTime = (uint)(mtr.Entries[mtr.StartLoopEntryIndex].Time + mtr.StartLoopTime);
@@ -59,7 +119,7 @@ namespace MusyXBoy {
 				Message = msg;
 			}
 		}
-		public class Track {
+		public class TemporaryTrack {
 			public List<TrackEntry> Entries { get; set; } = new List<TrackEntry>();
 			public uint? LoopTime { get; set; }
 		}

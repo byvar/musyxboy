@@ -102,6 +102,7 @@ namespace MusyXBoy {
             outPath = Path.Combine(mainDirectory, "SongMidi");
             for (int i = 0; i < (musyxFile.SongTable?.Value?.Length ?? 0); i++) {
                 MusyX_MidiConverter conv = new MusyX_MidiConverter(musyxFile.SongTable.Value.Songs[i].Song);
+                conv.Write(Path.Combine(outPath, $"{i}_{musyxFile.SongTable.Value.SongPointers[i].SerializedOffset:X8}.mid"));
             }
         }
 
