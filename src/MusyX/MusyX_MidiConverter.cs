@@ -88,10 +88,8 @@ namespace MusyXBoy {
 			uint curTrackTime = 0;
 			uint curTime = 0;
 			foreach (var e in mtr.Entries) {
-				if (curTrackTime+e.Time < curTime) {
+				/*if (curTrackTime+e.Time < curTime) {
 					throw new BinarySerializableException(e, $"Track time: {e.Time} - current time: {curTime}");
-				} /*else if (curTime != 0) {
-					Console.WriteLine($"Track time: {e.Time} - current time: {curTime}");
 				}*/
 				curTrackTime += (uint)e.Time;
 				curTime = curTrackTime;
