@@ -1,5 +1,6 @@
 ﻿using BinarySerializer;
 using BinarySerializer.Audio;
+using BinarySerializer.Audio.RIFF;
 using BinarySerializer.GBA.Audio.MusyX;
 using System;
 using System.Collections.Generic;
@@ -34,30 +35,16 @@ namespace MusyXBoy {
             byte[] unsignedData = data.Select(b => (byte)(b + 128)).ToArray();
 
             // Create WAV data
-            var formatChunk = new WAVFormatChunk() {
-                ChunkHeader = "fmt ",
-                FormatType = 1,
-                ChannelCount = channels,
-                SampleRate = sampleRate,
-                BitsPerSample = 8,
-            };
+            var wav = new WAV();
+            var fmt = wav.Format;
+            fmt.FormatType = 1;
+            fmt.ChannelCount = channels;
+            fmt.SampleRate = sampleRate;
+            fmt.BitsPerSample = 8;
+            wav.Data.Data = unsignedData;
 
-            var wav = new WAV {
-                Magic = "RIFF",
-                FileTypeHeader = "WAVE",
-                Chunks = new WAVChunk[]
-                {
-                            formatChunk,
-                            new WAVChunk()
-                            {
-                                ChunkHeader = "data",
-                                Data = unsignedData
-                            }
-                }
-            };
-
-            formatChunk.ByteRate = (formatChunk.SampleRate * formatChunk.BitsPerSample * formatChunk.ChannelCount) / 8;
-            formatChunk.BlockAlign = (ushort)((formatChunk.BitsPerSample * formatChunk.ChannelCount) / 8);
+            fmt.ByteRate = (fmt.SampleRate * fmt.BitsPerSample * fmt.ChannelCount) / 8;
+            fmt.BlockAlign = (ushort)((fmt.BitsPerSample * fmt.ChannelCount) / 8);
 
             // Get the output path
             var outputFilePath = Path.Combine(directory, filename + ".wav");
@@ -95,9 +82,9 @@ namespace MusyXBoy {
                 ByteArrayToFile(Path.Combine(outPath, $"{i}_{musyxFile.SongTable.Value.SongPointers[i].SerializedOffset:X8}.son"), songBytes);
             }
             outPath = Path.Combine(mainDirectory, "InstrumentData");
-            for (int i = 0; i < (musyxFile.InstrumentTable?.Value?.Instruments?.Length ?? 0); i++) {
-                var instrumentBytes = musyxFile.InstrumentTable.Value.InstrumentBytes[i];
-                ByteArrayToFile(Path.Combine(outPath, $"{i}_{musyxFile.InstrumentTable.Value.Instruments[i].SerializedOffset:X8}.bin"), instrumentBytes);
+            for (int i = 0; i < (musyxFile.InstrumentTable?.Value?.Macros?.Length ?? 0); i++) {
+                var instrumentBytes = musyxFile.InstrumentTable.Value.Macros[i]?.Value?.InstrumentBytes;
+                ByteArrayToFile(Path.Combine(outPath, $"{i}_{musyxFile.InstrumentTable.Value.Macros[i].PointerValue.SerializedOffset:X8}.bin"), instrumentBytes);
             }
             outPath = Path.Combine(mainDirectory, "SongMidi");
             for (int i = 0; i < (musyxFile.SongTable?.Value?.Length ?? 0); i++) {
