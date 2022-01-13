@@ -60,7 +60,7 @@ namespace MusyXBoy {
                     wavContext.AddFile(new StreamFile(wavContext, wavKey, outputStream));
 
                     // Write the data
-                    FileFactory.Write<WAV>(wavKey, wav, wavContext);
+                    FileFactory.Write<WAV>(wavContext, wavKey, wav);
                 }
             }
         }
