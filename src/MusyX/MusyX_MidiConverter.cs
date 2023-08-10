@@ -1,5 +1,5 @@
 ﻿using BinarySerializer;
-using BinarySerializer.GBA.Audio.MusyX;
+using BinarySerializer.Audio.GBA.MusyX;
 using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;

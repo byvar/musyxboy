@@ -4,6 +4,6 @@
 [submodule "submodules/BinarySerializer.Audio"]
 	path = submodules/BinarySerializer.Audio
 	url = https://github.com/BinarySerializer/BinarySerializer.Audio
-[submodule "submodules/BinarySerializer.GBA.Audio"]
-	path = submodules/BinarySerializer.GBA.Audio
-	url = https://github.com/BinarySerializer/BinarySerializer.GBA.Audio
+[submodule "submodules/BinarySerializer.Audio.GBA"]
+	path = submodules/BinarySerializer.Audio.GBA
+	url = https://github.com/BinarySerializer/BinarySerializer.Audio.GBA

@@ -61,13 +61,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\submodules\BinarySerializer.Audio.GBA\src\BinarySerializer.Audio.GBA.csproj">
+      <Project>{792bd3b5-d1d8-4a3a-8dcd-e78f33d536fc}</Project>
+      <Name>BinarySerializer.Audio.GBA</Name>
+    </ProjectReference>
     <ProjectReference Include="..\submodules\BinarySerializer.Audio\src\BinarySerializer.Audio.csproj">
       <Project>{648fb729-daed-42cb-b456-f199302c56d2}</Project>
       <Name>BinarySerializer.Audio</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\submodules\BinarySerializer.GBA.Audio\src\BinarySerializer.GBA.Audio.csproj">
-      <Project>{6825d5eb-4647-4210-a189-a224001d7fec}</Project>
-      <Name>BinarySerializer.GBA.Audio</Name>
     </ProjectReference>
     <ProjectReference Include="..\submodules\BinarySerializer\src\BinarySerializer.csproj">
       <Project>{cfb635c5-618c-427b-86c4-da55e1a23377}</Project>

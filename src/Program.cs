@@ -1,5 +1,5 @@
 ﻿using BinarySerializer;
-using BinarySerializer.GBA.Audio.MusyX;
+using BinarySerializer.Audio.GBA.MusyX;
 using CommandLine;
 using Konsole;
 using System;
@@ -57,7 +57,7 @@ namespace MusyXBoy {
             }
 
             MusyX_Settings musyXSettings = null;
-            Context.ConsoleLog logger = new Context.ConsoleLog();
+            Context.ConsoleLogger logger = new Context.ConsoleLogger();
             List<MusyX_File> musyxFiles = new List<MusyX_File>();
 
             using (Context context = new Context(basePath, log: false, verbose: false)) {
@@ -88,7 +88,7 @@ namespace MusyXBoy {
                         using (Context context = new Context(basePath, log: Settings.Log, verbose: true)) {
                             context.SetMusyXSettings(musyXSettings);
                             Directory.CreateDirectory(Settings.LogDirectory);
-                            ((Context.SerializerLog)context.Log).OverrideLogPath = Path.Combine(Settings.LogDirectory, $"{song.Offset.StringAbsoluteOffset}.txt");
+                            ((Context.SimpleSerializerLogger)context.SerializerLogger).OverrideLogPath = Path.Combine(Settings.LogDirectory, $"{song.Offset.StringAbsoluteOffset}.txt");
                             context.AddFile(new MemoryMappedFile(context, filename, 0x08000000, Endian.Little));
                             var basePtr = context.FilePointer(filename);
                             var s = context.Deserializer;
@@ -121,7 +121,7 @@ namespace MusyXBoy {
             }
         }
 
-        private static void FastScan(SerializerObject s, Dictionary<Pointer, List<int>> pointers, Context.ConsoleLog logger, List<MusyX_File> musyxFiles) {
+        private static void FastScan(SerializerObject s, Dictionary<Pointer, List<int>> pointers, Context.ConsoleLogger logger, List<MusyX_File> musyxFiles) {
             ProgressBar ProgressBarGaxScan = new ProgressBar(progressSize, progressTextWidth);
             Console.WriteLine();
 
@@ -136,7 +136,7 @@ namespace MusyXBoy {
 
                     try {
                         MusyX_File File = s.SerializeObject<MusyX_File>(default, name: nameof(File));
-                        logger.Log($"{File.Offset}: {File.SampleTable.Value.Samples.Length} Samples - {File.SongTable.Value?.Songs?.Length ?? 0} Songs");
+                        logger.LogInfo($"{File.Offset}: {File.SampleTable.Value.Samples.Length} Samples - {File.SongTable.Value?.Songs?.Length ?? 0} Songs");
                         musyxFiles.Add(File);
                     } catch {
                     }

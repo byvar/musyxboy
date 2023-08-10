@@ -11,9 +11,9 @@ namespace MusyXBoy {
         public Context(string basePath, bool log, bool verbose = true) : base(
             basePath: basePath, // Pass in the base path
             settings: new SerializerSettings(), // Pass in the settings
-            serializerLog: log ? new SerializerLog() : null, // Use serializer log for logging to a file
+            serializerLogger: log ? new SimpleSerializerLogger() : null, // Use serializer logger for logging to a file
             fileManager: new CustomFileManager(),
-            logger: verbose ? new ConsoleLog() : null) // Use console log
+            systemLogger: verbose ? new ConsoleLogger() : null) // Use console logger
         { }
 
         public class CustomFileManager : IFileManager {
@@ -55,15 +55,32 @@ namespace MusyXBoy {
             public PointerSize? LoggingPointerSize => PointerSize.Pointer32;
 
 			public Endian DefaultEndianness => Endian.Little;
+
+			// TODO: Set to true when debugging?
+			public bool LogAlignIfNotNull => false;
+
+			public bool AutoInitReadMap => false;
+
+			public bool AutoExportReadMap => false;
 		}
 
-        public class ConsoleLog : ILogger {
-            public void Log(object log) => Console.WriteLine(log);
-            public void LogWarning(object log) => Console.WriteLine(log);
-            public void LogError(object log) => Console.WriteLine(log);
-        }
+        public class ConsoleLogger : ISystemLogger {
+			public void Log(LogLevel logLevel, object log, params object[] args) {
+				switch (logLevel) {
+					case LogLevel.Error:
+						Console.WriteLine(log?.ToString() ?? String.Empty);
+						break;
+					case LogLevel.Warning:
+						Console.WriteLine(log?.ToString() ?? String.Empty);
+						break;
+					case LogLevel.Info:
+						Console.WriteLine(log?.ToString() ?? String.Empty);
+						break;
+				}
+			}
+		}
 
-        public class SerializerLog : ISerializerLog {
+        public class SimpleSerializerLogger : ISerializerLogger {
             public bool IsEnabled => !string.IsNullOrEmpty(LogFile);
 
             private StreamWriter _logWriter;

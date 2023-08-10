@@ -1,7 +1,7 @@
 ﻿using BinarySerializer;
 using BinarySerializer.Audio;
 using BinarySerializer.Audio.RIFF;
-using BinarySerializer.GBA.Audio.MusyX;
+using BinarySerializer.Audio.GBA.MusyX;
 using System;
 using System.Collections.Generic;
 using System.IO;
